@@ -254,5 +254,71 @@ public class BookDAO {
 		return bookList;
 
 	}
+	
+	
+	
+	//책리스트에서 데이터 한개 꺼내오기
+	public BookVO bookSelectOne(int bookId){
+
+		//VO
+		BookVO bookVO = null;
+		
+		
+		// 0. import java.sql.*;
+		
+		// 1. JDBC 드라이버 (MySQL) 로딩
+		// 2. Connection 얻어오기
+		this.connect();	
+
+		try {
+			
+			// 3. SQL문 준비 / 바인딩 / 실행
+			// SQL문 준비
+			String query = "";
+			query +=" select book_id, ";
+			query +="        title, ";
+			query +="        pubs, ";
+			query +="        date_format(pub_date, '%Y-%m-%d') as 'pub_date', ";
+			query +="        author_id ";
+			query +=" from book ";
+			query +=" where book_id = ? ";
+						
+			
+			// 바인딩 
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, bookId);   
+			
+			
+			//실행
+			rs = pstmt.executeQuery();
+
+		    // 4.결과처리 (java 리스트로 만든다)
+			rs.next();
+			
+			int id = rs.getInt("book_id");
+			String Title = rs.getString("title");
+			String Pub = rs.getString("pubs");
+			String PubDate = rs.getString("pub_date");
+			int baId = rs.getInt("author_id");
+			
+			bookVO = new BookVO(id, Title, Pub, PubDate, baId);
+
+
+			
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		} 
+		
+		// 5. 자원정리
+		this.close();
+		
+		return bookVO;
+		
+	}
+	
+	
+	
+	
 
 }

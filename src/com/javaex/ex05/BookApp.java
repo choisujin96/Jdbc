@@ -23,14 +23,17 @@ public class BookApp {
 		//int c03 = bookDAO.bookDelete(3);
 		
 		//책리스트
-		List<BookVO> bookList = bookDAO.bookSelect();
-	    System.out.print(bookList);
-		
-		
+		//List<BookVO> bookList = bookDAO.bookSelect();
+	    //System.out.print(bookList);
 		
 		
 		//bookSelectOne();
-		
+	    BookVO bookVO = bookDAO.bookSelectOne(4);
+	    System.out.println(bookVO);
+	    
+	    
+	    
+	    
 
 	}
 
