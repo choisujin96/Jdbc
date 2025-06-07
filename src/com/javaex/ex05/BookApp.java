@@ -23,10 +23,8 @@ public class BookApp {
 		//int c03 = bookDAO.bookDelete(3);
 		
 		//책리스트
-		
-		List<BookVO> bookList = new bookDAO.bookSelect();
-				
-		
+		List<BookVO> bookList = bookDAO.bookSelect();
+	    System.out.print(bookList);
 		
 		
 		
