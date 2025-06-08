@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.javaex.ex01.AuthorVO;
+import com.javaex.ex02.BookAuthorVo;
 
 public class BookDAO {
 
@@ -154,8 +155,7 @@ public class BookDAO {
 		return count;
 	}// Update
 
-	
-	//책삭
+	// 책삭
 	public int bookDelete(int bookId) {
 
 		int count = -1;
@@ -193,10 +193,7 @@ public class BookDAO {
 
 	} // delete
 
-	
-	
-	
-	//책리스트
+	// 책리스트
 	public List<BookVO> bookSelect() {
 
 		// 리스트
@@ -219,7 +216,6 @@ public class BookDAO {
 			query += "          date_format(pub_date, '%Y-%m-%d') as 'pub_date', ";
 			query += "          author_id ";
 			query += " from book ";
-			
 
 			// 바인딩
 			pstmt = conn.prepareStatement(query);
@@ -235,7 +231,6 @@ public class BookDAO {
 				String bookPub = rs.getString("pubs");
 				String bookPubDate = rs.getString("pub_date");
 				int bookAuthorId = rs.getInt("author_id");
-
 
 				// 데이터 객체로 만들기(묶기)
 				BookVO bookVO = new BookVO(bookId, bookTitle, bookPub, bookPubDate, bookAuthorId);
@@ -254,15 +249,68 @@ public class BookDAO {
 		return bookList;
 
 	}
-	
-	
-	
-	//책리스트에서 데이터 한개 꺼내오기
-	public BookVO bookSelectOne(int bookId){
 
-		//VO
+	// 책리스트에서 데이터 한개 꺼내오기
+	public BookVO bookSelectOne(int bookId) {
+
+		// VO
 		BookVO bookVO = null;
-		
+
+		// 0. import java.sql.*;
+
+		// 1. JDBC 드라이버 (MySQL) 로딩
+		// 2. Connection 얻어오기
+		this.connect();
+
+		try {
+
+			// 3. SQL문 준비 / 바인딩 / 실행
+			// SQL문 준비
+			String query = "";
+			query += " select book_id, ";
+			query += "        title, ";
+			query += "        pubs, ";
+			query += "        date_format(pub_date, '%Y-%m-%d') as 'pub_date', ";
+			query += "        author_id ";
+			query += " from book ";
+			query += " where book_id = ? ";
+
+			// 바인딩
+			pstmt = conn.prepareStatement(query);
+
+			pstmt.setInt(1, bookId);
+
+			// 실행
+			rs = pstmt.executeQuery();
+
+			// 4.결과처리 (java 리스트로 만든다)
+			rs.next();
+
+			int id = rs.getInt("book_id");
+			String Title = rs.getString("title");
+			String Pub = rs.getString("pubs");
+			String PubDate = rs.getString("pub_date");
+			int baId = rs.getInt("author_id");
+
+			bookVO = new BookVO(id, Title, Pub, PubDate, baId);
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		}
+
+		// 5. 자원정리
+		this.close();
+
+		return bookVO;
+
+	}
+
+	
+	//리스트 전체
+	public List<BookAuthorVo> bookSelectList(){
+
+	
+		List<BookAuthorVo> baList = new ArrayList<BookAuthorVo>();
 		
 		// 0. import java.sql.*;
 		
@@ -273,38 +321,49 @@ public class BookDAO {
 		try {
 			
 			// 3. SQL문 준비 / 바인딩 / 실행
+			
 			// SQL문 준비
 			String query = "";
-			query +=" select book_id, ";
-			query +="        title, ";
-			query +="        pubs, ";
-			query +="        date_format(pub_date, '%Y-%m-%d') as 'pub_date', ";
-			query +="        author_id ";
-			query +=" from book ";
-			query +=" where book_id = ? ";
+			query += " select 	bo.book_id "; 
+			query += "         ,bo.title ";
+			query += "         ,bo.pubs ";
+			query += "         ,bo.pub_date ";
+			query += "         ,au.author_id ";
+			query += "         ,au.author_name ";
+			query += "         ,au.author_desc ";
+			query += " from book bo, author au ";
+			query += " where bo.author_id = au.author_id; ";
+			System.out.println(query);
 						
 			
 			// 바인딩 
 			pstmt = conn.prepareStatement(query);
 			
-			pstmt.setInt(1, bookId);   
 			
 			
 			//실행
 			rs = pstmt.executeQuery();
 
 		    // 4.결과처리 (java 리스트로 만든다)
-			rs.next();
+			while(rs.next()) { //커서 만들기 커서가 내려가면 true, 내려갈 곳이 없으면 false라고 판단해서 끝냄
+					
+				//ResultSet의 데이터를 자바의 변수에 담는다.
+				 //만든변수            //컬럼명
+				
+				int bookID= rs.getInt("book_id"); 
+				String bookTitle = rs.getString("title");
+				String bookPub = rs.getString("pubs");
+				String bookPubdate = rs.getString("pub_date");
+				int authorId = rs.getInt("author_id");
+				String authorName = rs.getString("author_name");
+				String authorDesc = rs.getString("author_desc");
 			
-			int id = rs.getInt("book_id");
-			String Title = rs.getString("title");
-			String Pub = rs.getString("pubs");
-			String PubDate = rs.getString("pub_date");
-			int baId = rs.getInt("author_id");
-			
-			bookVO = new BookVO(id, Title, Pub, PubDate, baId);
-
-
+				BookAuthorVo baVO = new BookAuthorVo(bookID, bookTitle, bookPub, bookPubdate, 
+													 authorId, authorName, authorDesc);
+	
+				//VO를 리스트에 추가(add())한다
+				baList.add(baVO);
+			}
 			
 		} catch (SQLException e) {
 			System.out.println("error:" + e);
@@ -313,11 +372,10 @@ public class BookDAO {
 		// 5. 자원정리
 		this.close();
 		
-		return bookVO;
+		return baList;
+		
 		
 	}
-	
-	
 	
 	
 

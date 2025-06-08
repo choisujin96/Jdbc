@@ -2,6 +2,8 @@ package com.javaex.ex05;
 
 import java.util.List;
 
+import com.javaex.ex02.BookAuthorVo;
+
 public class BookApp {
 
 	public static void main(String[] args) {
@@ -28,11 +30,25 @@ public class BookApp {
 		
 		
 		//bookSelectOne();
-	    BookVO bookVO = bookDAO.bookSelectOne(4);
-	    System.out.println(bookVO);
+	   // BookVO bookVO = bookDAO.bookSelectOne(4);
+	   // System.out.println(bookVO);
 	    
 	    
-	    
+		List<BookAuthorVo> baList = bookDAO.bookSelectList();
+		for(int i=0; i<baList.size(); i++) {
+			
+			int bookID = baList.get(i).getBook_id();
+			String bookTitle = baList.get(i).getTitle();
+			String bookPub = baList.get(i).getPubs();
+			String bookPubdate = baList.get(i).getPub_date();
+			int authorId = baList.get(i).getAuthor_id();
+			String authorName = baList.get(i).getAuthorName();
+			String authorDesc = baList.get(i).getAuthorDesc();
+			
+			System.out.println(bookID + ". " + bookTitle + "/ " + bookPub + "/ " + bookPubdate + "/ "
+								+ authorId + ". " + authorName + "(" + authorDesc + ")");
+			
+		}
 	    
 
 	}

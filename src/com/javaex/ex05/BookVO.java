@@ -70,7 +70,7 @@ public class BookVO {
 	@Override
 	public String toString() {
 		return "BookVO [bookId=" + bookId + ", bookTitle=" + bookTitle + ", bookPubs=" + bookPubs + ", bookPubDate="
-				+ bookPubDate + ", bookAuthorId=" + bookAuthorId + "]";
+			  + bookPubDate + ", bookAuthorId=" + bookAuthorId + "]";
 	}
 	
 	
