@@ -29,8 +29,12 @@ public class BookUpdate {
 			String query = "";
 			query += " update book ";
 			query += " set	 title = ?";
-			query += " ,pubs = ?";
+			query += " 		,pubs = ?";
+			query += " 		,pub_date = ?";
+			query += " 		,author_id = ?";
 			query += " where book_id = ?";
+			
+			
 			
 			
 			//바인딩

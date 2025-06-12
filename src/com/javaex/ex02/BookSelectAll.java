@@ -137,7 +137,7 @@ public class BookSelectAll {
 		System.out.println("--------------------------");
 		for(int i=0; i<baList.size(); i++) {
 			
-			int bookId = baList.get(i).getBook_id();
+			int bookID = baList.get(i).getBook_id();
 			String bookTitle = baList.get(i).getTitle();
 			String bookPub = baList.get(i).getPubs();
 			String bookPubdate = baList.get(i).getPub_date();
@@ -145,7 +145,7 @@ public class BookSelectAll {
 			String authorName = baList.get(i).getAuthorName();
 			String authorDesc = baList.get(i).getAuthorDesc();
 			
-			System.out.println(bookId + ". " + bookTitle + "/ " + bookPub + "/ " + bookPubdate + "/ "
+			System.out.println(bookID + ". " + bookTitle + "/ " + bookPub + "/ " + bookPubdate + "/ "
 								+ authorId + ". " + authorName + "(" + authorDesc + ")");
 			
 		}
